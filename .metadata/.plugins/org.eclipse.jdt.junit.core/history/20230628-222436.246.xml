@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="GlobalExceptionHandlerTest" project="department-service" tests="1" started="1" failures="0" errors="0" ignored="0">
+  <testsuite name="com.eic.springbootmicroservices.departmentservice.exception.GlobalExceptionHandlerTest" time="1.168" displayname="GlobalExceptionHandlerTest" uniqueid="[engine:junit-jupiter]/[class:com.eic.springbootmicroservices.departmentservice.exception.GlobalExceptionHandlerTest]">
+    <testcase name="testHandleResourceNotFoundException" classname="com.eic.springbootmicroservices.departmentservice.exception.GlobalExceptionHandlerTest" time="1.168" displayname="testHandleResourceNotFoundException()" uniqueid="[engine:junit-jupiter]/[class:com.eic.springbootmicroservices.departmentservice.exception.GlobalExceptionHandlerTest]/[method:testHandleResourceNotFoundException()]"/>
+  </testsuite>
+</testrun>

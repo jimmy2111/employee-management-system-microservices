@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="OrganizationControllerTest" project="organization-service" tests="2" started="2" failures="0" errors="0" ignored="0">
+  <testsuite name="com.eic.springbootmicroservices.organizationservice.controller.OrganizationControllerTest" time="1.526" displayname="OrganizationControllerTest" uniqueid="[engine:junit-jupiter]/[class:com.eic.springbootmicroservices.organizationservice.controller.OrganizationControllerTest]">
+    <testcase name="testSaveOrganization" classname="com.eic.springbootmicroservices.organizationservice.controller.OrganizationControllerTest" time="1.519" displayname="testSaveOrganization()" uniqueid="[engine:junit-jupiter]/[class:com.eic.springbootmicroservices.organizationservice.controller.OrganizationControllerTest]/[method:testSaveOrganization()]"/>
+    <testcase name="testGetOrganizationByCode" classname="com.eic.springbootmicroservices.organizationservice.controller.OrganizationControllerTest" time="0.005" displayname="testGetOrganizationByCode()" uniqueid="[engine:junit-jupiter]/[class:com.eic.springbootmicroservices.organizationservice.controller.OrganizationControllerTest]/[method:testGetOrganizationByCode()]"/>
+  </testsuite>
+</testrun>

@@ -1,0 +1,5 @@
+package com.eic.springboot.exception;
+
+public class UserNotRegisteredException {
+
+}

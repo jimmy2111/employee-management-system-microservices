@@ -1,0 +1,9 @@
+package com.eic.springbootmicroservices.identityservice.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.eic.springbootmicroservices.identityservice.entity.UserCredential;
+
+public interface UserCredentialRepository extends JpaRepository<UserCredential, Integer> {
+
+}

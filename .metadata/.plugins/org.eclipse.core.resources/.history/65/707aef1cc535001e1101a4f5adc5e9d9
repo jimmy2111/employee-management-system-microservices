@@ -1,0 +1,27 @@
+package com.eic.springbootmicroservices.apigateway.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+import com.eic.springbootmicroservices.apigateway.security.JwtAuthenticationFilter;
+import com.eic.springbootmicroservices.apigateway.security.JwtTokenProvider;
+
+@Configuration
+public class GatewayConfig {
+	
+	@Autowired
+	private JwtAuthenticationFilter filter;
+
+	@Bean
+	public RouteLocator routes(RouteLocatorBuilder builder) {
+		return builder.routes().route("user", r -> r.path("/user-service/api/auth/**").filters(f -> f.stripPrefix(1).filter(filter)).uri("lb://user-service"))
+				.route("department", r -> r.path("/department-service/api/departments/**").filters(f -> f.stripPrefix(1).filter(filter)).uri("lb://department-service"))
+				.route("organization", r -> r.path("/organization-service/api/organizations/**").filters(f -> f.stripPrefix(1).filter(filter)).uri("lb://organization-service"))
+				.route("employee", r -> r.path("/employee-service/api/employees/**").filters(f -> f.stripPrefix(1).filter(filter)).uri("lb://employee-service")).build();
+	}
+
+}

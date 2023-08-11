@@ -1,0 +1,66 @@
+package com.eic.springbootmicroservices.organizationservice.service.impl;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import com.eic.springbootmicroservices.organizationservice.dto.OrganizationDto;
+import com.eic.springbootmicroservices.organizationservice.entity.Organization;
+import com.eic.springbootmicroservices.organizationservice.exception.OrganizationAlreadyExistsException;
+import com.eic.springbootmicroservices.organizationservice.exception.ResourceNotFoundException;
+import com.eic.springbootmicroservices.organizationservice.repository.OrganizationRepository;
+import com.eic.springbootmicroservices.organizationservice.service.OrganizationService;
+
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
+public class OrganizationServiceImpl implements OrganizationService {
+
+	private OrganizationRepository organizationRepository;
+	
+	private ModelMapper modelMapper;
+	@Override
+	public OrganizationDto saveOrganization(OrganizationDto organizationDto) {
+		Optional<Organization> optionalOrganization = organizationRepository.findByOrganizationCode(organizationDto.getOrganizationCode());
+		if (optionalOrganization.isPresent()) {
+			throw new OrganizationAlreadyExistsException("Organization already exists with organization code: "+organizationDto.getOrganizationCode());
+		}
+		Organization organization = modelMapper.map(organizationDto, Organization.class);
+		Organization savedOrganization = organizationRepository.save(organization);
+		return modelMapper.map(savedOrganization, OrganizationDto.class);
+	}
+
+	@Override
+	public OrganizationDto getOrganizationByCode(String organizationCode) {
+		Organization organization = organizationRepository.findByOrganizationCode(organizationCode).orElseThrow(
+				()-> new ResourceNotFoundException("Organization", "OrganizationCode", organizationCode)
+				);
+		return modelMapper.map(organization, OrganizationDto.class);
+	}
+
+	@Override
+	public List<OrganizationDto> getAllOrganizations() {
+		List<Organization> organizationList = organizationRepository.findAll();
+		List<OrganizationDto> organizations = organizationList.stream()
+				.map(organization -> modelMapper.map(organization, OrganizationDto.class))
+				.collect(Collectors.toList());
+		return organizations;
+	}
+
+	@Override
+	public OrganizationDto updateOrganization(String organizationCode, OrganizationDto organizationDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteOrganization(String organizationCode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

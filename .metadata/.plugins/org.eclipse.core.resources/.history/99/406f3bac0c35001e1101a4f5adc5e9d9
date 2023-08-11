@@ -1,0 +1,5 @@
+package com.eic.springbootmicroservices.apigateway.dto;
+
+public class LoginDto {
+
+}

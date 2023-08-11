@@ -1,0 +1,5 @@
+package com.eic.springbootmicroservices.identityservice.service;
+
+public class AuthService {
+
+}

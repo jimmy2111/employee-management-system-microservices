@@ -1,0 +1,11 @@
+//package com.eic.springbootmicroservices.apigateway.service;
+//
+//import com.eic.springbootmicroservices.apigateway.dto.LoginDto;
+//import com.eic.springbootmicroservices.apigateway.dto.UserDto;
+//
+//public interface AuthService {
+//
+//	String login(LoginDto loginDto);
+//
+//    String register(UserDto userDto);
+//}

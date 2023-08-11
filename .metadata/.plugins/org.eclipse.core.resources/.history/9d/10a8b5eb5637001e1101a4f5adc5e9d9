@@ -1,0 +1,5 @@
+package com.eic.springbootmicroservices.organizationservice.exception;
+
+public class OrganizationAlreadyExistsException {
+
+}

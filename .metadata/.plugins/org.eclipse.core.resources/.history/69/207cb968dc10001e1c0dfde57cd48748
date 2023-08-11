@@ -1,0 +1,26 @@
+package com.eic.springbootmicroservices.identityservice.config;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+
+import com.eic.springbootmicroservices.identityservice.entity.UserCredential;
+import com.eic.springbootmicroservices.identityservice.repository.UserCredentialRepository;
+
+@Component
+public class CustomUserDetailsService implements UserDetailsService {
+
+	@Autowired
+	private UserCredentialRepository userCredentialRepository;
+	
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Optional<UserCredential> credentials =  userCredentialRepository.findByName(username);
+		return credentials.map(CustomUserDetails::new).orElseThrow(()-> new UsernameNotFoundException("User Not Found with name : "+username));
+	}
+
+}

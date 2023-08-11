@@ -1,0 +1,5 @@
+package com.eic.springbootmicroservices.departmentservice.security;
+
+public class JwtTokenProvider {
+
+}

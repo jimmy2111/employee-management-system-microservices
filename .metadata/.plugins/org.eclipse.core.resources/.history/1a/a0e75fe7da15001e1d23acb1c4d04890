@@ -1,0 +1,44 @@
+package com.eic.springbootmicroservices.employeeservice.service.impl;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class EmployeeServiceImplTest {
+
+	@Test
+	void testSaveEmployee() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetEmployeeById() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetDefaultDepartment() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetallEmployees() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetAllEmployeesByPagingAndSorting() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testDeleteEmployee() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testUpdateEmployee() {
+		fail("Not yet implemented");
+	}
+
+}

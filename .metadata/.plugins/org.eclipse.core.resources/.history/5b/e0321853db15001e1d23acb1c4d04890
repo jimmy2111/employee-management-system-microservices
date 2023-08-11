@@ -1,0 +1,93 @@
+package com.eic.springbootmicroservices.employeeservice.service.impl;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
+
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import com.eic.springbootmicroservices.employeeservice.dto.ApiResponseDto;
+import com.eic.springbootmicroservices.employeeservice.dto.DepartmentDto;
+import com.eic.springbootmicroservices.employeeservice.dto.EmployeeDto;
+import com.eic.springbootmicroservices.employeeservice.dto.OrganizationDto;
+import com.eic.springbootmicroservices.employeeservice.entity.Employee;
+import com.eic.springbootmicroservices.employeeservice.repository.EmployeeRepository;
+
+class EmployeeServiceImplTest {
+	
+	@InjectMocks
+	private EmployeeServiceImpl employeeServiceImpl;
+	
+	@Mock
+	private EmployeeRepository employeeRepository;
+	
+	private ModelMapper modelMapper;
+	
+	private WebClient webClient;
+	
+	private EmployeeDto employeeDto;
+	
+	private Employee employee;
+	
+	private DepartmentDto departmentDto;
+	
+	private OrganizationDto organizationDto;
+	
+	private ApiResponseDto apiResponseDto;
+	
+	@BeforeEach
+	void setup() {
+		MockitoAnnotations.openMocks(this);
+		modelMapper= new ModelMapper();
+		employeeServiceImpl = new EmployeeServiceImpl(employeeRepository, modelMapper, webClient);
+		employeeDto = new EmployeeDto(1L, "Jimmy", "Patel", "ji@ji.com", "IT", "ABC");
+		employee = modelMapper.map(employeeDto, Employee.class);
+		departmentDto = new DepartmentDto(1L, "Information Technology","IT" , "IT");
+		organizationDto = new OrganizationDto(1L, "ABC Org.", "ABC ORG.", "ABC", LocalDateTime.now());
+		apiResponseDto = new ApiResponseDto(employeeDto, departmentDto, organizationDto);
+		
+	}
+
+	@Test
+	void testSaveEmployee() {
+		doReturn(apiResponseDto)e
+	}
+
+	@Test
+	void testGetEmployeeById() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetDefaultDepartment() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetallEmployees() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetAllEmployeesByPagingAndSorting() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testDeleteEmployee() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testUpdateEmployee() {
+		fail("Not yet implemented");
+	}
+
+}

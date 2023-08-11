@@ -1,0 +1,5 @@
+package com.eic.springbootmicroservices.apigateway.util;
+
+public class JwtUtil {
+
+}

@@ -1,0 +1,14 @@
+package com.eic.springbootmicroservices.departmentservice.service.impl;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class DepartmentServiceImplTest {
+
+	@Test
+	void testSaveDepartment() {
+		fail("Not yet implemented");
+	}
+
+}

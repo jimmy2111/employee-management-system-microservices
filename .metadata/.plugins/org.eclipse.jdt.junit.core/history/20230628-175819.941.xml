@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="DepartmentServiceImplTest" project="department-service" tests="2" started="2" failures="0" errors="0" ignored="0">
+  <testsuite name="com.eic.springbootmicroservices.departmentservice.service.impl.DepartmentServiceImplTest" time="1.954" displayname="DepartmentServiceImplTest" uniqueid="[engine:junit-jupiter]/[class:com.eic.springbootmicroservices.departmentservice.service.impl.DepartmentServiceImplTest]">
+    <testcase name="testGetDepartmentByCode" classname="com.eic.springbootmicroservices.departmentservice.service.impl.DepartmentServiceImplTest" time="1.941" displayname="testGetDepartmentByCode()" uniqueid="[engine:junit-jupiter]/[class:com.eic.springbootmicroservices.departmentservice.service.impl.DepartmentServiceImplTest]/[method:testGetDepartmentByCode()]"/>
+    <testcase name="testSaveDepartment" classname="com.eic.springbootmicroservices.departmentservice.service.impl.DepartmentServiceImplTest" time="0.011" displayname="testSaveDepartment()" uniqueid="[engine:junit-jupiter]/[class:com.eic.springbootmicroservices.departmentservice.service.impl.DepartmentServiceImplTest]/[method:testSaveDepartment()]"/>
+  </testsuite>
+</testrun>

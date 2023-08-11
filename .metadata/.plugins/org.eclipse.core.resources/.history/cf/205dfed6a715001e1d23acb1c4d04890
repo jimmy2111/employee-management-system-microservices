@@ -1,0 +1,48 @@
+package com.eic.springbootmicroservices.departmentservice.service.impl;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
+
+import com.eic.springbootmicroservices.departmentservice.dto.DepartmentDto;
+import com.eic.springbootmicroservices.departmentservice.entity.Department;
+import com.eic.springbootmicroservices.departmentservice.repository.DepartmentRepository;
+
+@ExtendWith(MockitoExtension.class)
+class DepartmentServiceImplTest {
+
+	@InjectMocks
+	private DepartmentServiceImpl departmentServiceImpl;
+	
+	@Mock
+	private DepartmentRepository departmentRepository;
+	
+	@Mock
+	private ModelMapper modelMapper;
+	
+	@BeforeEach
+	void setup() {
+		MockitoAnnotations.openMocks(this);
+	}
+	
+	@Test
+	void testSaveDepartment() {
+		DepartmentDto departmentDto = new DepartmentDto(1L, "IT", "Information Technology", "IT001");
+		
+		Department department = modelMapper.map(departmentDto, Department.class);
+		when(departmentRepository.save(any())).thenReturn(department);
+		when(modelMapper.map(any(Department.class),any(DepartmentDto.class))).thenReturn(departmentDto);
+		DepartmentDto result = departmentServiceImpl.saveDepartment(departmentDto);
+		assertEquals(departmentDto, result);
+	}
+
+}

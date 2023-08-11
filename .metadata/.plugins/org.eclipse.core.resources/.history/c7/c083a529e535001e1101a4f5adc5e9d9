@@ -1,0 +1,67 @@
+//package com.eic.springbootmicroservices.apigateway.service.impl;
+//
+//import java.util.HashSet;
+//import java.util.Set;
+//
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//import org.springframework.security.authentication.AuthenticationManager;
+//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.stereotype.Service;
+//
+//import com.eic.springbootmicroservices.apigateway.dto.LoginDto;
+//import com.eic.springbootmicroservices.apigateway.dto.UserDto;
+//import com.eic.springbootmicroservices.apigateway.entity.Role;
+//import com.eic.springbootmicroservices.apigateway.entity.User;
+//import com.eic.springbootmicroservices.apigateway.exception.UserAPIException;
+//import com.eic.springbootmicroservices.apigateway.repository.RoleRepository;
+//import com.eic.springbootmicroservices.apigateway.repository.UserRepository;
+//import com.eic.springbootmicroservices.apigateway.security.JwtTokenProvider;
+//import com.eic.springbootmicroservices.apigateway.service.AuthService;
+//
+//import lombok.AllArgsConstructor;
+//
+//@Service
+//@AllArgsConstructor
+//public class AuthServiceImpl implements AuthService {
+//
+//    private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
+//    private AuthenticationManager authenticationManager;
+//    private UserRepository userRepository;
+//    private RoleRepository roleRepository;
+//    private PasswordEncoder passwordEncoder;
+//    private JwtTokenProvider jwtTokenProvider;
+//    @Override
+//    public String login(LoginDto loginDto) {
+//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(),loginDto.getPassword()));
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        LOGGER.info("Authentication Set Successfull");
+//        String token = jwtTokenProvider.generateToken(authentication);
+//        LOGGER.info(" JWT Token Generated for authenticated User");
+//        return token;
+//    }
+//
+//    @Override
+//    public String register(UserDto userDto) {
+//        if (userRepository.existsByEmail(userDto.getEmail())){
+//            LOGGER.error("User Email Already Exists");
+//            throw new UserAPIException("User Email Already Exists");
+//        }
+//        User user = new User();
+//        user.setFirstName(userDto.getFirstName());
+//        user.setLastName(userDto.getLastName());
+//        user.setEmail(userDto.getEmail());
+//        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+//        Set<Role> roles = new HashSet<>();
+//        Role role = roleRepository.findByName("ROLE_USER").get();
+//        LOGGER.info("Assigned Role to User");
+//        roles.add(role);
+//        user.setRoles(roles);
+//        userRepository.save(user);
+//        LOGGER.info("User Registered Successfully");
+//        return "User Registered Successfully";
+//    }
+//}

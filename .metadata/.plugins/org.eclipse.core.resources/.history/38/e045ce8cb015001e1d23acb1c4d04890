@@ -1,0 +1,24 @@
+package com.eic.springbootmicroservices.departmentservice.controller;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class DepartmentControllerTest {
+
+	@Test
+	void testSaveDepartment() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetDepartment() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testDepartmentController() {
+		fail("Not yet implemented");
+	}
+
+}

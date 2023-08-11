@@ -1,0 +1,25 @@
+package com.eic.springbootmicroservices.identityservice.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.eic.springbootmicroservices.identityservice.entity.UserCredential;
+import com.eic.springbootmicroservices.identityservice.repository.UserCredentialRepository;
+
+@Service
+public class AuthService {
+	
+	@Autowired
+	private UserCredentialRepository userCredentialRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
+	public String saveUser(UserCredential userCredential) {
+		userCredential.setPassword(passwordEncoder.encode(userCredential.getPassword()));
+		userCredentialRepository.save(userCredential);
+		return "User Added to the System";
+	}
+
+}

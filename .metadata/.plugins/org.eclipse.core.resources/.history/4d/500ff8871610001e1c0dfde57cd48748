@@ -1,0 +1,5 @@
+package com.eic.springbootmicroservices.departmentservice.exception;
+
+public class ErrorDetails {
+
+}

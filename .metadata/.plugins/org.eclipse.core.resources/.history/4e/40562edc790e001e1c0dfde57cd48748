@@ -1,0 +1,29 @@
+package com.eic.springbootmicroservices.departmentservice.service.impl;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import com.eic.springbootmicroservices.departmentservice.dto.DepartmentDto;
+import com.eic.springbootmicroservices.departmentservice.entity.Department;
+import com.eic.springbootmicroservices.departmentservice.repository.DepartmentRepository;
+import com.eic.springbootmicroservices.departmentservice.service.DepartmentService;
+
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
+public class DepartmentServiceImpl implements DepartmentService {
+
+	private DepartmentRepository departmentRepository;
+	
+	private ModelMapper modelMapper;
+	
+	@Override
+	public DepartmentDto saveDepartment(DepartmentDto departmentDto) {
+		Department department = modelMapper.map(departmentDto, Department.class);
+		Department savedDepartment = departmentRepository.save(department);
+		DepartmentDto savedDepartmentDto = modelMapper.map(savedDepartment, DepartmentDto.class);
+		return savedDepartmentDto;
+	}
+
+}

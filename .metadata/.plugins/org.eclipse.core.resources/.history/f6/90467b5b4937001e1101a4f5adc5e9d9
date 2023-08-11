@@ -1,0 +1,152 @@
+package com.eic.springbootmicroservices.employeeservice.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import com.eic.springbootmicroservices.employeeservice.dto.ApiResponseDto;
+import com.eic.springbootmicroservices.employeeservice.dto.DepartmentDto;
+import com.eic.springbootmicroservices.employeeservice.dto.EmployeeDto;
+import com.eic.springbootmicroservices.employeeservice.dto.OrganizationDto;
+import com.eic.springbootmicroservices.employeeservice.entity.Employee;
+import com.eic.springbootmicroservices.employeeservice.exception.ResourceNotFoundException;
+import com.eic.springbootmicroservices.employeeservice.repository.EmployeeRepository;
+import com.eic.springbootmicroservices.employeeservice.service.ApiClient;
+import com.eic.springbootmicroservices.employeeservice.service.EmployeeService;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
+public class EmployeeServiceImpl implements EmployeeService {
+
+	private EmployeeRepository employeeRepository;
+	
+	private ModelMapper modelMapper;
+	
+	//private ApiClient apiClient;
+	
+	private WebClient webClient;
+//	private RestTemplate restTemplate;
+	
+	
+	@Override
+	public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
+		Employee employee = modelMapper.map(employeeDto, Employee.class);
+		Employee savedEmployee = employeeRepository.save(employee);
+		return modelMapper.map(savedEmployee, EmployeeDto.class);
+	}
+	
+	//@CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
+	@Retry(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
+	@Override
+	public ApiResponseDto getEmployeeById(Long employeeId) {
+		Employee employee = employeeRepository.findById(employeeId).orElseThrow(()->
+				new ResourceNotFoundException("Employee","Id", employeeId)
+				);
+//		ResponseEntity<DepartmentDto> responseEntity =  restTemplate.getForEntity("http://localhost:8080/api/departments/"+employee.getDepartmentCode(), DepartmentDto.class);
+//		DepartmentDto departmentDto = responseEntity.getBody();
+		
+		DepartmentDto departmentDto =  webClient.get().uri("http://localhost:8080/api/departments/"+employee.getDepartmentCode())
+						.retrieve().bodyToMono(DepartmentDto.class).block();
+		//DepartmentDto departmentDto = apiClient.getDepartment(employee.getDepartmentCode());
+		
+		OrganizationDto organizationDto = webClient.get().uri("http://localhost:8083/api/organizations/"+employee.getOrganizationCode()).retrieve().bodyToMono(OrganizationDto.class).block();
+		EmployeeDto employeeDto = modelMapper.map(employee, EmployeeDto.class);
+		ApiResponseDto apiResponseDto = new ApiResponseDto();
+		apiResponseDto.setDepartment(departmentDto);
+		apiResponseDto.setEmployee(employeeDto);
+		apiResponseDto.setOrganization(organizationDto);
+		return apiResponseDto;
+	}
+	 public ApiResponseDto getDefaultDepartment(Long employeeId) {
+	        Employee employee = employeeRepository.findById(employeeId).get();
+
+	        DepartmentDto departmentDto = new DepartmentDto();
+	        departmentDto.setDepartmentName("R&D Department");
+	        departmentDto.setDepartmentCode("RD001");
+	        departmentDto.setDepartmentDescription("Research and Development Department");
+
+	        EmployeeDto employeeDto = modelMapper.map(employee, EmployeeDto.class);
+			ApiResponseDto apiResponseDto = new ApiResponseDto();
+			apiResponseDto.setDepartment(departmentDto);
+			apiResponseDto.setEmployee(employeeDto);
+			return apiResponseDto;
+	    }
+	@Override
+	public List<ApiResponseDto> getallEmployees() {
+		List<ApiResponseDto> list = new ArrayList<>();
+		List<Employee> employees= employeeRepository.findAll();
+		for(Employee e : employees) {
+			DepartmentDto departmentDto =  webClient.get().uri("http://localhost:8080/api/departments/"+e.getDepartmentCode())
+					.retrieve().bodyToMono(DepartmentDto.class).block();
+			OrganizationDto organizationDto = webClient.get().uri("http://localhost:8083/api/organizations/"+e.getOrganizationCode()).retrieve().bodyToMono(OrganizationDto.class).block();
+			EmployeeDto employeeDto = modelMapper.map(e, EmployeeDto.class);
+			ApiResponseDto apiResponseDto = new ApiResponseDto();
+			apiResponseDto.setDepartment(departmentDto);
+			apiResponseDto.setEmployee(employeeDto);
+			apiResponseDto.setOrganization(organizationDto);
+			list.add(apiResponseDto);
+		}
+		return list;
+	}
+	
+	@Override
+	public Page<ApiResponseDto> getAllEmployeesByPagingAndSorting(Integer pageNo, Integer pageSize, String sortField,
+			String sortOrder) {
+		List<ApiResponseDto> list = new ArrayList<>();
+		Sort sort = sortOrder.equalsIgnoreCase("asc")?Sort.by(sortField).ascending():Sort.by(sortField).descending();
+		Pageable paging = PageRequest.of(pageNo, pageSize, sort);
+		Page<Employee> page = employeeRepository.findAll(paging);
+		for(Employee e :page.getContent()) {
+			DepartmentDto departmentDto = webClient.get().uri("http://localhost:8080/api/departments/"+e.getDepartmentCode())
+					.retrieve().bodyToMono(DepartmentDto.class).block();
+			OrganizationDto organizationDto = webClient.get().uri("http://localhost:8083/api/organizations/"+e.getOrganizationCode()).retrieve().bodyToMono(OrganizationDto.class).block();
+			EmployeeDto employeeDto = modelMapper.map(e, EmployeeDto.class);
+			ApiResponseDto apiResponseDto = new ApiResponseDto();
+			apiResponseDto.setDepartment(departmentDto);
+			apiResponseDto.setEmployee(employeeDto);
+			apiResponseDto.setOrganization(organizationDto);
+			list.add(apiResponseDto);
+		}
+		Page<ApiResponseDto> pagedResult = new PageImpl<>(list,paging,page.getTotalElements());
+		return pagedResult;
+	}
+	
+	@Override
+	public void deleteEmployee(Long employeeId) {
+		Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
+		if (!optionalEmployee.isPresent()) {
+			throw new ResourceNotFoundException("Employee", "EmployeeId", employeeId);
+		}
+		employeeRepository.deleteById(employeeId);
+	}
+	
+	@Override
+	public EmployeeDto updateEmployee(EmployeeDto employeeDto) {
+		Optional<Employee> optionalEmployee = employeeRepository.findById(employeeDto.getId());
+		if (!optionalEmployee.isPresent()) {
+			throw new ResourceNotFoundException("Employee", "EmployeeId", employeeDto.getId());
+		}
+		Employee employee = optionalEmployee.get();
+		employee.setFirstName(employeeDto.getFirstName());
+		employee.setLastName(employeeDto.getLastName());
+		employee.setEmail(employeeDto.getEmail());
+		employee.setDepartmentCode(employeeDto.getDepartmentCode());
+		employee.setOrganizationCode(employeeDto.getOrganizationCode());
+		Employee updatedEmployee = employeeRepository.save(employee);
+		return modelMapper.map(updatedEmployee, EmployeeDto.class);
+	}
+}
+

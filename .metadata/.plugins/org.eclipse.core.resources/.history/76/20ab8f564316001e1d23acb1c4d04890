@@ -1,0 +1,19 @@
+package com.eic.springbootmicroservices.organizationservice.service.impl;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class OrganizationServiceImplTest {
+
+	@Test
+	void testSaveOrganization() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetOrganizationByCode() {
+		fail("Not yet implemented");
+	}
+
+}

@@ -1,0 +1,5 @@
+package com.eic.springbootmicroservices.employeeservice.dto;
+
+public class ApiResponseDto {
+
+}

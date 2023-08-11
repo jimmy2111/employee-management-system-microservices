@@ -1,0 +1,127 @@
+package com.eic.springbootmicroservices.employeeservice.service.impl;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import com.eic.springbootmicroservices.employeeservice.dto.ApiResponseDto;
+import com.eic.springbootmicroservices.employeeservice.dto.DepartmentDto;
+import com.eic.springbootmicroservices.employeeservice.dto.EmployeeDto;
+import com.eic.springbootmicroservices.employeeservice.dto.OrganizationDto;
+import com.eic.springbootmicroservices.employeeservice.entity.Employee;
+import com.eic.springbootmicroservices.employeeservice.repository.EmployeeRepository;
+
+import reactor.core.publisher.Mono;
+
+class EmployeeServiceImplTest {
+	
+	@InjectMocks
+	private EmployeeServiceImpl employeeServiceImpl;
+	
+	@Mock
+	private EmployeeRepository employeeRepository;
+	
+	private ModelMapper modelMapper;
+	
+	private WebClient webClient;
+	
+	private EmployeeDto employeeDto;
+	
+	private Employee employee;
+	
+	private DepartmentDto departmentDto;
+	
+	private OrganizationDto organizationDto;
+	
+	private ApiResponseDto apiResponseDto;
+	
+	@BeforeEach
+	void setup() {
+		MockitoAnnotations.openMocks(this);
+		modelMapper= new ModelMapper();
+		employeeServiceImpl = new EmployeeServiceImpl(employeeRepository, modelMapper, webClient);
+		employeeDto = new EmployeeDto(1L, "Jimmy", "Patel", "ji@ji.com", "IT", "ABC");
+		employee = modelMapper.map(employeeDto, Employee.class);
+		departmentDto = new DepartmentDto(1L, "Information Technology","IT" , "IT");
+		organizationDto = new OrganizationDto(1L, "ABC Org.", "ABC ORG.", "ABC", LocalDateTime.now());
+		apiResponseDto = new ApiResponseDto(employeeDto, departmentDto, organizationDto);
+		
+	}
+
+	@Test
+	void testSaveEmployee() {
+		doReturn(employee).when(employeeRepository).save(any());
+		EmployeeDto result = employeeServiceImpl.saveEmployee(employeeDto);
+		assertEquals(employeeDto.getDepartmentCode(), result.getDepartmentCode());
+	}
+
+//	@Test
+//	void testGetEmployeeById() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	void testGetDefaultDepartment() {
+//		fail("Not yet implemented");
+//	}
+
+	@Test
+	void testGetallEmployees() {
+		doReturn(List.of(employee)).when(employeeRepository).findAll();
+		WebClient webClientMock = mock(WebClient.class);
+	    WebClient.RequestHeadersUriSpec uriSpecMock = mock(WebClient.RequestHeadersUriSpec.class);
+	    WebClient.ResponseSpec responseSpecMock = mock(WebClient.ResponseSpec.class);
+	    Mono<DepartmentDto> departmentDtoMonoMock = Mono.just(new DepartmentDto(1L, "Information Technology","IT" , "IT"));
+	    Mono<OrganizationDto> organizationDtoMonoMock = Mono.just(new OrganizationDto(1L, "ABC Org.", "ABC ORG.", "ABC", LocalDateTime.now()));
+
+	    when(webClientMock.get()).thenReturn(uriSpecMock);
+	    when(uriSpecMock.uri("http://localhost:8080/api/departments/{code}"+any())).thenReturn(uriSpecMock);
+	    when(uriSpecMock.retrieve()).thenReturn(responseSpecMock);
+	    when(responseSpecMock.bodyToMono(DepartmentDto.class)).thenReturn(departmentDtoMonoMock);
+		
+	    when(webClientMock.get()).thenReturn(uriSpecMock);
+	    when(uriSpecMock.uri("http://localhost:8083/api/organizations/{code}"+any())).thenReturn(uriSpecMock);
+	    when(uriSpecMock.retrieve()).thenReturn(responseSpecMock);
+	    when(responseSpecMock.bodyToMono(OrganizationDto.class)).thenReturn(organizationDtoMonoMock);
+	    
+	 
+		ApiResponseDto result = employeeServiceImpl.getallEmployees().get(0);
+		assertEquals(departmentDto, result.getDepartment());
+	}
+
+//	@Test
+//	void testGetAllEmployeesByPagingAndSorting() {
+//		fail("Not yet implemented");
+//	}
+
+	@Test
+	void testDeleteEmployee() {
+		employeeServiceImpl.deleteEmployee(1L);
+		verify(employeeRepository).deleteById(any());
+	}
+
+	@Test
+	void testUpdateEmployee() {
+		doReturn(Optional.of(employee)).when(employeeRepository).findById(any());
+		doReturn(employee).when(employeeRepository).save(any());
+		EmployeeDto result = employeeServiceImpl.updateEmployee(employeeDto);
+		assertEquals(employeeDto.getEmail(), result.getEmail());
+	}
+
+}

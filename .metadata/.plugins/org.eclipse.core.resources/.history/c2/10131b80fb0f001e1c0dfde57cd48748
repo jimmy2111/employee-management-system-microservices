@@ -1,0 +1,5 @@
+package com.eic.springbootmicroservices.organizationservice.entity;
+
+public class Organization {
+
+}

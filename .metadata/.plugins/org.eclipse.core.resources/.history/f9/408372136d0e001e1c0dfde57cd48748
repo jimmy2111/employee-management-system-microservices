@@ -1,0 +1,5 @@
+package com.eic.springbootmicroservices.departmentservice.entity;
+
+public class Department {
+
+}

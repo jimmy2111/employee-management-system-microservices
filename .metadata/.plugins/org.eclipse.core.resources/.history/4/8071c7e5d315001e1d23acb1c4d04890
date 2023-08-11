@@ -1,0 +1,51 @@
+package com.eic.springbootmicroservices.departmentservice.exception;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.context.request.WebRequest;
+
+class GlobalExceptionHandlerTest {
+	
+	@InjectMocks
+	private GlobalExceptionHandler globalExceptionHandler;
+	
+	@Mock
+	private ResourceNotFoundException resourceNotFoundException;
+	
+	@Mock
+	private Exception exception;
+	
+	@Mock
+	private WebRequest webRequest;
+
+	@BeforeEach
+	void setup() {
+		MockitoAnnotations.openMocks(this);
+	}
+	
+	@Test
+	void testHandleResourceNotFoundException() {
+		ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException("Department", "code", "ABC");
+		
+		when(webRequest.getDescription(false)).thenReturn("Department Not Found");
+		ResponseEntity<ErrorDetails> result = globalExceptionHandler.handleGlobalException(resourceNotFoundException, webRequest);
+		ErrorDetails errorDetails = result.getBody();
+		
+		assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+		assertEquals("DEPARTMENT_NOT_FOUND", errorDetails.getErrorCode());
+	}
+
+	@Test
+	void testHandleGlobalException() {
+		fail("Not yet implemented");
+	}
+
+}

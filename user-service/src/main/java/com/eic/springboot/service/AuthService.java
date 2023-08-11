@@ -1,0 +1,15 @@
+package com.eic.springboot.service;
+
+import java.util.List;
+
+import com.eic.springboot.dto.LoginDto;
+import com.eic.springboot.dto.UserDto;
+import com.eic.springboot.entity.Role;
+
+public interface AuthService {
+    String login(LoginDto loginDto);
+
+    String register(UserDto userDto);
+    
+    List<String> getRoles(String username);
+}

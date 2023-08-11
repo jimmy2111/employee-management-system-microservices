@@ -1,0 +1,5 @@
+package com.eic.springbootmicroservices.identityservice.repository;
+
+public interface UserCredentialRepository {
+
+}

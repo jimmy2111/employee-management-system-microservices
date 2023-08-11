@@ -1,0 +1,11 @@
+package com.eic.springbootmicroservices.employeeservice.service;
+
+import com.eic.springbootmicroservices.employeeservice.dto.EmployeeDto;
+
+public interface EmployeeService {
+	
+	EmployeeDto saveEmployee(EmployeeDto employeeDto);
+	
+	EmployeeDto getEmployeeById(Long employeeId);
+
+}

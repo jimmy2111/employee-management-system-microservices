@@ -1,0 +1,19 @@
+package com.eic.springbootmicroservices.departmentservice.exception;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class GlobalExceptionHandlerTest {
+
+	@Test
+	void testHandleResourceNotFoundException() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testHandleGlobalException() {
+		fail("Not yet implemented");
+	}
+
+}

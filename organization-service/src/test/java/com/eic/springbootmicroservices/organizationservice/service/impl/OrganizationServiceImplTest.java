@@ -1,0 +1,60 @@
+package com.eic.springbootmicroservices.organizationservice.service.impl;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
+
+import com.eic.springbootmicroservices.organizationservice.dto.OrganizationDto;
+import com.eic.springbootmicroservices.organizationservice.entity.Organization;
+import com.eic.springbootmicroservices.organizationservice.repository.OrganizationRepository;
+
+class OrganizationServiceImplTest {
+	
+	@InjectMocks
+	private OrganizationServiceImpl organizationServiceImpl;
+	
+	@Mock
+	private OrganizationRepository organizationRepository;
+	
+	private ModelMapper modelMapper;
+	
+	private OrganizationDto organizationDto;
+	
+	private Organization organization;
+	
+	
+	@BeforeEach
+	void setup() {
+		MockitoAnnotations.openMocks(this);
+		modelMapper = new ModelMapper();
+		organizationServiceImpl = new OrganizationServiceImpl(organizationRepository, modelMapper);
+		organizationDto = new OrganizationDto(1L, "ABC", "ABC Organization", "ABC_ORG", LocalDateTime.now());
+		organization = modelMapper.map(organizationDto, Organization.class);
+		
+	}
+
+	@Test
+	void testSaveOrganization() {
+		doReturn(organization).when(organizationRepository).save(any());
+		OrganizationDto result = organizationServiceImpl.saveOrganization(organizationDto);
+		assertEquals(organizationDto.getOrganizationCode(), result.getOrganizationCode());
+	}
+
+	@Test
+	void testGetOrganizationByCode() {
+		doReturn(Optional.of(organization)).when(organizationRepository).findByOrganizationCode(any());
+		OrganizationDto result = organizationServiceImpl.getOrganizationByCode("ABC_ORG");
+		assertNotNull(result);
+	}
+
+}

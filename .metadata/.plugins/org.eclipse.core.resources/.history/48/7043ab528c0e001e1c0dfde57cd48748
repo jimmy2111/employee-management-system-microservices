@@ -1,0 +1,8 @@
+package com.eic.springbootmicroservices.employeeservice.service;
+
+import org.springframework.cloud.openfeign.FeignClient;
+
+@FeignClient(url = "http://localhost:8080", value = "DEPARTMENT-SERVICE")
+public interface ApiClient {
+
+}
